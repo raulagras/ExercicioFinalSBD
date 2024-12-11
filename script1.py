@@ -36,7 +36,7 @@ def obtener_datos():
         print(f"Error al insertar datos en MongoDB: {e}")
 
 # Programar la ejecución a intervalos regulares (cada X minutos)
-INTERVALO_MINUTOS = 1
+INTERVALO_MINUTOS = 5
 schedule.every(INTERVALO_MINUTOS).minutes.do(obtener_datos)
 
 # Llamar inmediatamente a la función para obtener e insertar los datos al iniciar
