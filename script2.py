@@ -1,9 +1,10 @@
 import pymongo
 import pandas as pd
+import os
 from datetime import datetime
 
-# Configuración de MongoDB
-MONGO_URI = "mongodb+srv://raulagras04:changeme@cluster0.u3swg.mongodb.net/?retryWrites=true&w=majority"
+# Cargar URI de MongoDB desde una variable de entorno
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://raulagras04:changeme@cluster0.u3swg.mongodb.net/?retryWrites=true&w=majority")
 DATABASE_NAME = "baseBicis"
 COLLECTION_NAME = "bicis"
 
@@ -24,17 +25,24 @@ def cargar_datos():
         # Convertir los documentos en una lista de diccionarios
         datos = []
         for doc in documentos:
-	    # Convertir _id a string (de ObjectId a string)
+            # Convertir _id a string
             doc["_id"] = str(doc["_id"]) if "_id" in doc else None
-            # Extraer solo los campos necesarios
-            filtered_data = {key: doc.get(key) for key in required_fields if key in doc}
+            # Filtrar y manejar campos faltantes
+            filtered_data = {key: doc.get(key, None) for key in required_fields}
+            # Convertir el campo timestamp a formato datetime si existe
+            if filtered_data.get("timestamp"):
+                try:
+                    filtered_data["timestamp"] = pd.to_datetime(filtered_data["timestamp"])
+                except ValueError:
+                    filtered_data["timestamp"] = None
             datos.append(filtered_data)
 
         # Crear un DataFrame con los datos obtenidos
         df = pd.DataFrame(datos)
 
         # Verificar si se cargaron los datos correctamente
-        print(f"Datos cargados: {df.head()}")
+        print(f"Datos cargados correctamente: {len(df)} registros.")
+        print(df.head())
 
         return df
 
@@ -44,15 +52,15 @@ def cargar_datos():
 
 # Función para exportar los datos a CSV y Parquet
 def exportar_datos(df):
-    if df is not None:
+    if df is not None and not df.empty:
         try:
             # Exportar a CSV
             df.to_csv('datos_bicis.csv', index=False)
-            print("Datos exportados a CSV.")
+            print("Datos exportados a CSV correctamente.")
 
             # Exportar a Parquet
             df.to_parquet('datos_bicis.parquet', index=False)
-            print("Datos exportados a Parquet.")
+            print("Datos exportados a Parquet correctamente.")
 
         except Exception as e:
             print(f"Error al exportar los datos: {e}")
@@ -60,5 +68,6 @@ def exportar_datos(df):
         print("No hay datos para exportar.")
 
 # Ejecutar el script para obtener y exportar los datos
-df_bicis = cargar_datos()
-exportar_datos(df_bicis)
+if __name__ == "__main__":
+    df_bicis = cargar_datos()
+    exportar_datos(df_bicis)
