@@ -1,5 +1,0 @@
-pymongo
-requests
-schedule
-pandas
-pyarrow
