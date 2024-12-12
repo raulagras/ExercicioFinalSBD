@@ -5,10 +5,10 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copiar los archivos del proyecto al contenedor
-COPY . /app
+COPY . /app/
 
 # Instalar las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Comando para ejecutar el script
+# Comando por defecto para ejecutar el script Python
 CMD ["python", "script1.py"]
