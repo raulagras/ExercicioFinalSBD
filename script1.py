@@ -4,12 +4,12 @@ import schedule
 import time
 from datetime import datetime, timezone
 
-# Configuración de MongoDB Atlas
-MONGO_URI = "mongodb://mongodb:27017"
+# Configuración de MongoDB
+MONGO_URI = "mongodb+srv://raulagras04:changeme@cluster0.u3swg.mongodb.net/?retryWrites=true&w=majority"
 DATABASE_NAME = "baseBicis"
 COLLECTION_NAME = "bicis"
 
-# Conexión a MongoDB Atlas
+# Conexión a MongoDB
 client = pymongo.MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
@@ -24,11 +24,25 @@ def obtener_datos():
         response.raise_for_status()  # Lanza un error si la respuesta no es 200 OK
         datos = response.json()
 
-	 # Agregar timestamp a los datos (usando datetime.now con zona horaria UTC)
-        datos["timestamp"] = datetime.now(timezone.utc)
-
-        # Insertar los datos en MongoDB
-        resultado = collection.insert_one(datos)
+        # Asegúrate de que los datos que recibes tengan la estructura esperada
+        if "network" in datos and "stations" in datos["network"]:
+            estaciones = datos["network"]["stations"]
+            
+            # Crear una lista de documentos con el timestamp y los datos de cada bicicleta
+            documentos = []
+            for estacion in estaciones:
+                documento = estacion.copy()  # Copiar el diccionario de cada estación
+                documento["timestamp"] = datetime.now(timezone.utc)  # Agregar timestamp a cada documento
+                documentos.append(documento)
+            
+            # Insertar todos los documentos de las bicicletas a la vez
+            if documentos:
+                resultado = collection.insert_many(documentos)
+                print(f"Se insertaron {len(resultado.inserted_ids)} documentos.")
+            else:
+                print("No se encontraron estaciones para insertar.")
+        else:
+            print("Error: Estructura de datos inesperada en la respuesta de la API.")
 
     except requests.exceptions.RequestException as e:
         print(f"Error al obtener datos de la API: {e}")
