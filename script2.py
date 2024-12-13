@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 # Cargar URI de MongoDB desde una variable de entorno
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://raulagras04:changeme@cluster0.u3swg.mongodb.net/?retryWrites=true&w=majority")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb:27017")
 DATABASE_NAME = "baseBicis"
 COLLECTION_NAME = "bicis"
 
