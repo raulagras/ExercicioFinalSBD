@@ -7,7 +7,7 @@ WORKDIR /app
 # Copiar los archivos del proyecto al contenedor
 COPY . /app
 
-# Instalar las dependencias
+# Instalar las dependencias necesarias
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Comando para ejecutar el script
