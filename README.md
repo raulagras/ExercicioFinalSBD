@@ -247,9 +247,10 @@ En el repositorio, ir a **Actions > Set up a workflow 		yourself** y definir el 
 				- 
 					name: Build and push
 					uses: docker/build-push-action@v5
-					with: context: . 
-					push: true 
-					tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+					with: 
+     						context: . 
+						push: true 
+						tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
 ### Funcionamiento
 
 -   El Workflow se ejecutará automáticamente y una nueva imagen creada con el código actual del repositorio será enviada al registro de Docker Hub.
