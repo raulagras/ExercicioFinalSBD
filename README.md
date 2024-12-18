@@ -248,7 +248,7 @@ En el repositorio, ir a **Actions > Set up a workflow 		yourself** y definir el 
 					name: Build and push
 					uses: docker/build-push-action@v5
 					with: 
-     						context: . 
+     					context: . 
 						push: true 
 						tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
 ### Funcionamiento
