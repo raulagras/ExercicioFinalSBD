@@ -195,7 +195,7 @@ Ejecuta el siguiente comando para levantar ambos servicios:
 			Días de vacaciones: N
 			Total de documentos = (24 horas * 12 consultas/hora) * N días * 49 documentos por consulta.
 
-#### 5. Automatizar Actualizaciones desde GitHub
+### 5. Automatizar Actualizaciones desde GitHub
 
 Es posible configurar una automatización en GitHub para que la imagen se construya con cada nuevo push al repositorio y automáticamente se envíe al registro (hub.docker.com).
 
